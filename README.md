@@ -1,16 +1,23 @@
-# Emotional Speech Recognition (RAVDESS)
+# Emotional Speech Recognition
 
-A small PyTorch notebook project that trains a simple CNN on **log-mel spectrograms** extracted from the **RAVDESS emotional speech** dataset.
+A small PyTorch notebook project for emotion classification from speech using **log-mel spectrograms**.
+
+The notebook contains workflows for:
+- **RAVDESS** (expected under `archive/Actor_XX/`)
+- **CREMA-D** (expected under `AudioWAV/`)
 
 ## What’s in this repo
 
 - `main.ipynb` – end-to-end workflow:
-  - load RAVDESS `.wav` files from `archive/Actor_XX/`
+  - load datasets from `archive/` (RAVDESS) and/or `AudioWAV/` (CREMA-D)
   - parse emotion labels from filenames
   - compute fixed-size log-mel spectrograms
-  - train/test split by **actor IDs**
+  - train/val/test split by **actor IDs**
   - train a small 2D CNN classifier in PyTorch
-- `archive/` – dataset folder expected to contain `Actor_01` … `Actor_24` subfolders with `.wav` files
+  - evaluate with confusion matrix + classification report
+- `archive/` – RAVDESS folder expected to contain `Actor_01` … `Actor_24` subfolders with `.wav` files
+- `AudioWAV/` – CREMA-D audio folder (flat directory of `.wav` files)
+- `logmel_data/` – cached `.npy` log-mel tensors (train/val/test)
 
 ## Requirements
 
@@ -31,6 +38,8 @@ jupyter notebook main.ipynb
 (If you don’t have Jupyter installed, run `pip install notebook` or use VS Code’s notebook support.)
 
 ## Dataset notes
+
+### RAVDESS
 
 This notebook expects the RAVDESS audio-only speech files named like:
 
@@ -58,16 +67,26 @@ Emotional Speech/
     Actor_02/
       *.wav
     ...
+
+### CREMA-D
+
+The notebook also includes a loader for CREMA-D where audio files are expected under:
+
+```
+Emotional Speech/
+  AudioWAV/
+    *.wav
+```
 ```
 
 ## Model & preprocessing (as implemented)
 
-- Audio is loaded as mono and padded/trimmed to **3 seconds** at **16 kHz**
+- Audio is loaded as mono and padded/trimmed to a fixed duration (see notebook cells)
 - Log-mel spectrogram parameters:
   - `n_mels = 64`, `n_fft = 1024`, `hop_length = 160`
   - time dimension is padded/trimmed to a fixed number of frames
   - per-sample normalization
-- Model: a small CNN with Conv → BN → ReLU → MaxPool blocks, global average pooling, then a linear classifier
+- Model: a small CNN classifier in PyTorch (plus some experiment cells using `torchvision` backbones)
 
 ## Reproducibility
 

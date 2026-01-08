@@ -3,3 +3,14 @@ pandas>=1.5
 matplotlib>=3.7
 librosa>=0.10
 torch>=2.0
+
+# Used in the notebook for eval/plots
+scikit-learn>=1.2
+seaborn>=0.12
+
+# Used in the notebook for audio/transforms and model experiments
+torchaudio>=2.0
+torchvision>=0.15
+
+# Optional: convenient for VS Code notebooks
+ipykernel>=6.0
